@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebSalesControl.Models;
+using WebSalesControl.Models.ViewModels;
 
 namespace WebSalesControl.Controllers
 {
