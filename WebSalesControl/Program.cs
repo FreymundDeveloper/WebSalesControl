@@ -3,7 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WebSalesControl.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<WebSalesControlContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("WebSalesControlContext") ?? throw new InvalidOperationException("Connection string 'WebSalesControlContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WebSalesControlContext") ?? throw new InvalidOperationException("Connection string 'WebSalesControlContext' not found."), 
+    builder => builder.MigrationsAssembly("WebSalesControl")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
