@@ -9,6 +9,9 @@ builder.Services.AddDbContext<WebSalesControlContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Dependencies
+builder.Services.AddScoped<SeedingService>();
+
 // Https configs
 builder.Services.AddHttpsRedirection(options =>
 {
@@ -25,6 +28,17 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{ // Dependencies Execute
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<WebSalesControlContext>();
+        var seedingService = new SeedingService(context);
+        seedingService.Seed();
+    }
+}
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
