@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WebSalesControl.Data;
+using WebSalesControl.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<WebSalesControlContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WebSalesControlContext") ?? throw new InvalidOperationException("Connection string 'WebSalesControlContext' not found."), 
@@ -11,6 +13,7 @@ builder.Services.AddControllersWithViews();
 
 // Dependencies
 builder.Services.AddScoped<SeedingService>();
+builder.Services.AddScoped<SellerService>();
 
 // Https configs
 builder.Services.AddHttpsRedirection(options =>
