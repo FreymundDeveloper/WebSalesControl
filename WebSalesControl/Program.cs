@@ -11,9 +11,10 @@ builder.Services.AddDbContext<WebSalesControlContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Dependencies
+// Dependencies services
 builder.Services.AddScoped<SeedingService>();
 builder.Services.AddScoped<SellerService>();
+builder.Services.AddScoped<DepartmentService>();
 
 // Https configs
 builder.Services.AddHttpsRedirection(options =>
