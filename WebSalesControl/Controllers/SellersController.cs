@@ -16,6 +16,16 @@ namespace WebSalesControl.Controllers
             _departmentService = departmentService;
         }
 
+        private IActionResult ValidateId(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null) return NotFound();
+
+            return View(obj);
+        }
+
         public IActionResult Index()
         {
             var list = _sellerService.FindAll();
@@ -39,12 +49,7 @@ namespace WebSalesControl.Controllers
 
         public IActionResult Delete(int? id) 
         {
-            if (id == null) return NotFound();
-
-            var obj = _sellerService.FindById(id.Value);
-            if (obj == null) return NotFound();
-
-            return View(obj);
+            return ValidateId(id);
         }
 
         [HttpPost]
@@ -53,6 +58,11 @@ namespace WebSalesControl.Controllers
         {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(int? id) 
+        {
+            return ValidateId(id);
         }
     }
 }
