@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 using WebSalesControl.Data;
 using WebSalesControl.Services;
 
@@ -16,11 +19,26 @@ builder.Services.AddScoped<SeedingService>();
 builder.Services.AddScoped<SellerService>();
 builder.Services.AddScoped<DepartmentService>();
 
-// Https configs
+// Https config
 builder.Services.AddHttpsRedirection(options =>
 {
     options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
     options.HttpsPort = 5001;
+});
+
+// Localization config
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    const string defaultCulture = "en-US";
+
+    var supportedCultures = new[]
+    {
+        new CultureInfo(defaultCulture)
+    };
+
+    options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
 });
 
 var app = builder.Build();
@@ -43,6 +61,7 @@ else
     }
 }
 
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
