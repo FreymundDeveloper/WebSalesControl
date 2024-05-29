@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebSalesControl.Data;
 using WebSalesControl.Models;
+using WebSalesControl.Services.Exceptions;
 
 namespace WebSalesControl.Services
 {
@@ -35,5 +36,20 @@ namespace WebSalesControl.Services
             _context.Seller.Remove(obj);
             _context.SaveChanges();
         } 
+
+        public void Update(Seller seller)
+        {
+            if (!_context.Seller.Any(x => x.Id == seller.Id)) throw new NotFoundException("ID not found!");
+
+            try
+            {
+                _context.Update(seller);
+                _context.SaveChanges();
+            }
+            catch (DbConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
+        }
     }
 }

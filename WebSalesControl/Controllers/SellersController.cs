@@ -2,6 +2,7 @@
 using WebSalesControl.Models;
 using WebSalesControl.Models.ViewModels;
 using WebSalesControl.Services;
+using WebSalesControl.Services.Exceptions;
 
 namespace WebSalesControl.Controllers
 {
@@ -63,6 +64,40 @@ namespace WebSalesControl.Controllers
         public IActionResult Details(int? id) 
         {
             return ValidateId(id);
+        }
+
+        public IActionResult Edit(int? id) 
+        {
+            var validate = ValidateId(id);
+
+            if (validate != NotFound())
+            {
+                List<Department> departments = _departmentService.FindAll();
+                SellerFormViewModel viewModel = new SellerFormViewModel { Seller = _sellerService.FindById(id!.Value), Departments = departments };
+                return View(viewModel);
+            }
+            else return validate;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if (id != seller.Id) return BadRequest();
+
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
     }
 }
