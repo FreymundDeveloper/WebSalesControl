@@ -8,5 +8,15 @@ namespace WebSalesControl.Controllers
         {
             return View();
         }
+
+        public IActionResult SimpleSearch()
+        {
+            return View();
+        }
+
+        public IActionResult GroupingSearch()
+        {
+            return View();
+        }
     }
 }
