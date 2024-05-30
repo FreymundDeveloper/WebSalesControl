@@ -32,10 +32,26 @@ namespace WebSalesControl.Services
 
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
-        } 
+            await CanRemoveAsync(id);
+            try
+            {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e) 
+            {
+                throw new IntegrityException(e.Message);
+            }
+        }
+        
+        private async Task CanRemoveAsync(int id)
+        {
+            if (await _context.SalesRecord.AnyAsync(obj => obj.Seller.Id == id))
+            {
+                throw new IntegrityException("This seller have sales records, delete they is required!");
+            }
+        }
 
         public async Task UpdateAsync(Seller seller)
         {
