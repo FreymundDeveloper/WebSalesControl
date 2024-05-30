@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebSalesControl.Models
 {
@@ -26,6 +27,8 @@ namespace WebSalesControl.Models
         [Display(Name = "Base Salary")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
         public double BaseSalary { get; set; }
+
+        [ValidateNever]
         public Department Department { get; set; }
 
         [Display(Name = "Department Id")]

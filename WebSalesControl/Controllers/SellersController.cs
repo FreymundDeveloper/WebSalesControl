@@ -79,7 +79,7 @@ namespace WebSalesControl.Controllers
             var validate = ValidateId(id);
             var obj = _sellerService.FindById(id!.Value);
 
-            if (validate == View(obj))
+            if (validate is not RedirectToActionResult)
             {
                 List<Department> departments = _departmentService.FindAll();
                 SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
